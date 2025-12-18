@@ -9,8 +9,19 @@ with DAG(
     catchup=False,
 ) as dag:
 
-    create_table = PostgresOperator(
-        task_id="create_stock_table",
-        postgres_conn_id="postgres_default",
-        sql="sql/create_stock_table.sql",
+    create_stock_table = PostgresOperator(
+    task_id="create_stock_table",
+    postgres_conn_id="postgres",
+    sql="""
+        CREATE TABLE IF NOT EXISTS stock_prices (
+            symbol TEXT NOT NULL,
+            timestamp TIMESTAMP NOT NULL,
+            open NUMERIC,
+            high NUMERIC,
+            low NUMERIC,
+            close NUMERIC,
+            volume BIGINT,
+            PRIMARY KEY (symbol, timestamp)
+        );
+        """
     )
